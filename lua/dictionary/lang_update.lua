@@ -55,23 +55,24 @@ local languages = {
 
 --- Function to change the language of the LTeX Language Server
 --- @param language string
---- @return nil
 function LangUpdate.changeLanguage(language)
 	local bufnr = vim.api.nvim_get_current_buf()
-	local client = vim.lsp.get_active_clients({ bufnr = bufnr, name = "ltex" })
+	local clients = vim.lsp.get_active_clients({ bufnr = bufnr, name = "ltex" })
 
-	if #client == 0 then
+	if #clients == 0 then
 		vim.notify("No ltex client attached")
-	else
-		client = client[1]
-		client.config.settings = {
-			ltex = {
-				language = language,
-			},
-		}
-		client.notify("workspace/didChangeConfiguration", client.config.settings)
-		vim.notify("Language changed to " .. language)
+		return
 	end
+
+	local client = clients[1]
+	-- Ensure that ltex settings exist
+	client.config.settings.ltex = client.config.settings.ltex or {}
+	-- Update only the language setting
+	client.config.settings.ltex.language = language
+
+	-- Notify the LSP client of the configuration change
+	client.notify("workspace/didChangeConfiguration", { settings = client.config.settings })
+	vim.notify("Language changed to " .. language)
 end
 
 function LangUpdate.pick_lang()
