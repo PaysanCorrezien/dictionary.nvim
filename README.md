@@ -80,8 +80,8 @@ so I use those :
 vim.keymap.set("n", "<leader>zg", "<cmd>DictionaryAddWord <CR>", { desc = "Add word to dict" }) -- Add the current word to dictionary, if override_zg = true it does the same without leader
 vim.keymap.set("n", "<leader>zL", "<cmd>DictionaryPickLang<CR>", { desc = "Change LSP Lang" })
 vim.keymap.set("n", "<leader>gU", "<cmd>DictionaryUpdate <CR>", { desc = "Edit Dicts" })
-vim.keymap.set("n", "<leader>zF", "<cmd>DictionaryUpdateLang fr<CR>", { desc = "Correct French" })
-vim.keymap.set("n", "<leader>zE", "<cmd>DictionaryUpPickLang en<CR>", { desc = "Correct English" })
+vim.keymap.set("n", "<leader>zF", "<cmd>DictionaryUpdateLspLang fr<CR>", { desc = "Correct French" })
+vim.keymap.set("n", "<leader>zE", "<cmd>DictionaryUpdateLspLang en<CR>", { desc = "Correct English" })
 ```
 
 ## License
