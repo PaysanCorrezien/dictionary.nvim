@@ -1,5 +1,6 @@
 local Path = require("plenary.path")
 local cmp = require("cmp")
+local spellfile = require("dictionary.spellfile")
 
 local DictionaryManager = {}
 
@@ -18,6 +19,7 @@ DictionaryManager.config = {
 	dictionary_paths = {}, -- Array of dictionary file paths
 	override_zg = false,
 	ltex_dictionary = false, -- New option
+	spelllang = vim.o.spelllang, -- New option
 	cmp = {
 		enabled = false,
 		custom_dict_path = "",
@@ -376,6 +378,12 @@ function DictionaryManager.setup(user_config)
 	vim.cmd("command! DictionaryAddWord lua require('dictionary').add_word_to_spell_and_sync()")
 	vim.cmd("command! DictionaryConfigPrint lua require('dictionary').conf()")
 	vim.cmd("command! DictionaryUpdate lua require('dictionary').update_custom_dictionary()")
+	-- init.lua
+
+	vim.cmd([[
+command! -nargs=* DictionaryAddSpellFile 
+    \ lua require('dictionary.spellfile').check_and_download_spell_files({<f-args>})
+]])
 
 	if DictionaryManager.config.override_zg then
 		vim.api.nvim_set_keymap(
