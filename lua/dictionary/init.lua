@@ -385,6 +385,15 @@ command! -nargs=* DictionaryAddSpellFile
     \ lua require('dictionary.spellfile').check_and_download_spell_files({<f-args>})
 ]])
 
+	vim.cmd([[
+command! -nargs=1 DictionaryUpdateLspLang 
+    \ lua require('dictionary.lang_update').changeLanguage(<f-args>)
+]])
+	vim.cmd([[
+command! DictionaryPickLang
+        \ lua require('dictionary.lang_update').pick_lang()
+]])
+	--TODO: desc
 	if DictionaryManager.config.override_zg then
 		vim.api.nvim_set_keymap(
 			"n",
