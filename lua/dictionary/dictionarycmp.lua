@@ -3,26 +3,25 @@ local cmp = require("cmp")
 local DictionaryCMP = {}
 
 function DictionaryCMP.new(config)
-    local source = {
-        config = config,
-        custom_dict_path = config.custom_dict_path,
-        max_spell_suggestions = config.max_spell_suggestions or 10,
-        keyword_pattern = config.keyword_pattern or ".",
-        kind_icon = config.kind_icon or cmp.lsp.CompletionItemKind.Text,
-    }
-    setmetatable(source, { __index = DictionaryCMP })
-    return source
+	local source = {
+		config = config,
+		custom_dict_path = config.custom_dict_path,
+		max_spell_suggestions = config.max_spell_suggestions or 10,
+		keyword_pattern = config.keyword_pattern or ".",
+		kind_icon = config.kind_icon or cmp.lsp.CompletionItemKind.Text,
+	}
+	setmetatable(source, { __index = DictionaryCMP })
+	return source
 end
 
 function DictionaryCMP:get_metadata()
-    return {
-        priority = self.config.priority,
-        menu = self.config.source_label,
-        debounce = 0,
-        name = self.config.name,
-    }
+	return {
+		priority = self.config.priority,
+		menu = self.config.source_label,
+		debounce = 0,
+		name = self.config.name,
+	}
 end
-
 
 function DictionaryCMP:is_available()
 	local is_available = vim.tbl_contains(self.config.filetypes, vim.bo.filetype)
@@ -35,10 +34,10 @@ function DictionaryCMP:get_custom_suggestions(prefix)
 		for line in io.lines(self.custom_dict_path) do
 			if string.find(line, prefix) == 1 then
 				-- print("Matching word from custom dict: ", line)
-        table.insert(suggestions, {
-        label = line,
-        kind = self.config.kind_icon,
-    })
+				table.insert(suggestions, {
+					label = line,
+					-- kind = self.config.kind_icon,
+				})
 			end
 		end
 	end
@@ -46,7 +45,7 @@ function DictionaryCMP:get_custom_suggestions(prefix)
 end
 
 function DictionaryCMP:get_keyword_pattern()
-  return self.config.keyword_pattern
+	return self.config.keyword_pattern
 end
 
 function DictionaryCMP:generate_candidates(input, option)
@@ -63,7 +62,7 @@ function DictionaryCMP:generate_candidates(input, option)
 			if string.find(line, input) == 1 and not seenLabels[line] then
 				customDictItems[#customDictItems + 1] = {
 					label = line,
-					kind = self.config.kind_icon,
+					-- kind = self.config.kind_icon,
 					sortText = "1" .. line,
 				}
 				seenLabels[line] = true -- Mark this label as seen
@@ -96,27 +95,27 @@ function DictionaryCMP:generate_candidates(input, option)
 	for _, item in ipairs(customDictItems) do
 		items[#items + 1] = item
 	end
-    -- Then add other Vim spell suggestions
-    for k, v in ipairs(entries) do
-        if not seenLabels[v] then
-            local spellItem = {
-                label = v,
-                filterText = option.keep_all_entries and input or v,
-                sortText = string.format("2%0" .. loglen .. "d", k + offset),
-            }
-            table.insert(vimSpellItems, spellItem)
-            seenLabels[v] = true -- Mark this label as seen
-        end
-    end
-    -- Combine lists
-    local combinedItems = {}
-    for _, item in ipairs(customDictItems) do
-        table.insert(combinedItems, item)
-    end
-    for _, item in ipairs(vimSpellItems) do
-        table.insert(combinedItems, item)
-    end
-    return combinedItems
+	-- Then add other Vim spell suggestions
+	for k, v in ipairs(entries) do
+		if not seenLabels[v] then
+			local spellItem = {
+				label = v,
+				filterText = option.keep_all_entries and input or v,
+				sortText = string.format("2%0" .. loglen .. "d", k + offset),
+			}
+			table.insert(vimSpellItems, spellItem)
+			seenLabels[v] = true -- Mark this label as seen
+		end
+	end
+	-- Combine lists
+	local combinedItems = {}
+	for _, item in ipairs(customDictItems) do
+		table.insert(combinedItems, item)
+	end
+	for _, item in ipairs(vimSpellItems) do
+		table.insert(combinedItems, item)
+	end
+	return combinedItems
 end
 
 function DictionaryCMP:complete(params, callback)

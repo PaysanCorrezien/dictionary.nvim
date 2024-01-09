@@ -366,7 +366,26 @@ function DictionaryManager.setup(user_config)
 		if not status then
 			print("Error registering CMP source: " .. result) -- result contains error message
 		else
-			-- print("CMP source registered successfully.")
+			-- setup on user side dont work here
+			-- cmp.setup({
+			-- 	sources = cmp.config.sources({
+			-- 		{
+			-- 			name = "dictionary",
+			-- 			priority = DictionaryManager.config.cmp.priority,
+			-- 		}, -- Custom Icon
+			-- 		formatting = {
+			-- 			format = function(entry, vim_item)
+			-- 				if entry.source.name == "dictionary" then
+			-- 					vim_item.kind = DictionaryManager.config.cmp.kind_icon or "" -- Custom icon
+			-- 					vim_item.menu = DictionaryManager.config.cmp.source_label or "[Dict]"
+			-- 				else
+			-- 					vim_item.kind = cmp.lsp.CompletionItemKind[vim_item.kind] -- Default handling for other sources
+			-- 				end
+			-- 				return vim_item
+			-- 			end,
+			-- 		},
+			-- 	}),
+			-- })
 		end
 	end
 	-- Ensure at least one dictionary path is set
